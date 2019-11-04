@@ -33,12 +33,12 @@ class GetStatusAction
    *
    * @var array
    */
-  const ACTION_STATUS = array(
+  const ACTION_STATUS = [
     self::ACTION_RESPOND => self::STATUS_IN_PROGRESS,
     self::ACTION_CANCEL => self::STATUS_CANCEL,
     self::ACTION_FAIL => self::STATUS_FAILED,
     self::ACTION_COMPLETE => self::STATUS_COMPLETED
-  );
+  ];
 
   /**
    * Active status
@@ -52,7 +52,7 @@ class GetStatusAction
    *
    * @var int
    */
-  private $OwnerId;
+  private $ownerId;
 
   /**
    * Executor ID
@@ -60,7 +60,7 @@ class GetStatusAction
    * @var int
    */
 
-  private $ExecutorId;
+  private $executorId;
 
   /**
    * Expiration date
@@ -69,10 +69,10 @@ class GetStatusAction
    */
   private $expirationDate;
 
-  public function __construct(int $OwnerId, int $ExecutorId, string $expirationDate)
+  public function __construct(int $ownerId, int $executorId, string $expirationDate)
   {
-    $this->OwnerId = $OwnerId;
-    $this->ExecutorId = $ExecutorId;
+    $this->ownerId = $ownerId;
+    $this->executorId = $executorId;
     $this->expirationDate = $expirationDate;
   }
 
@@ -82,23 +82,17 @@ class GetStatusAction
    * @param int $activeStatus
    * @throws Exception Status does not exist
    */
-  public function setActiveStatus (int $activeStatus)
+  public function setActiveStatus (int $activeStatus): void
   {
     try {
-      $this->activeStatus = $activeStatus;
-
-      if ($activeStatus !== self::STATUS_NEW
-        && $activeStatus !== self::STATUS_IN_PROGRESS
-        && $activeStatus !== self::STATUS_CANCEL
-        && $activeStatus !== self::STATUS_FAILED
-        && $activeStatus !== self::STATUS_COMPLETED
-      ) {
-        throw new Exception('Ошибка: статуса ' . $activeStatus . ' статус не существует');
+      if(!in_array($activeStatus, [self::STATUS_NEW, self::STATUS_IN_PROGRESS, self::STATUS_CANCEL, self::STATUS_FAILED, self::STATUS_COMPLETED]))
+      {
+        throw new DomainException('Ошибка: статуса ' . $activeStatus . ' статус не существует');
       }
+    } catch (Throwable $exception) {
+      error_log("Не удалось определить статус: " . $exception->getMessage());
     }
-    catch (Exception $e) {
-      error_log("Не удалось определить статус: " . $e->getMessage());
-    }
+    $this->activeStatus = $activeStatus;
   }
 
   /**
@@ -106,14 +100,20 @@ class GetStatusAction
    *
    * @return array
    */
-  public function getAvailableStatuses(): array{}
+  public function getAvailableStatuses(): array
+  {
+    return [self::STATUS_NEW, self::STATUS_IN_PROGRESS, self::STATUS_CANCEL, self::STATUS_FAILED, self::STATUS_COMPLETED];
+  }
 
   /**
    * Retrieves list available actions
    *
    * @return array
    */
-  public function getAvailableActions(): array{}
+  public function getAvailableActions(): array
+  {
+    return [self::ACTION_RESPOND, self::ACTION_CANCEL, self::ACTION_FAIL, self::ACTION_COMPLETE];
+  }
 
   /**
    * Retrieves appropriate status after action
@@ -123,7 +123,6 @@ class GetStatusAction
    */
   public function getNextStatus(string $action): ?int
   {
-    $nextStatus = array_key_exists($action, self::ACTION_STATUS) ? self::ACTION_STATUS[$action] : null;
-    return $nextStatus;
+    return self::ACTION_STATUS[$action] ?? null;
   }
 }
