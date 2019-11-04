@@ -82,11 +82,10 @@ class GetStatusAction
    * @param int $activeStatus
    * @throws Exception Status does not exist
    */
-  public function setActiveStatus (int $activeStatus): void
+  public function setActiveStatus(int $activeStatus): void
   {
     try {
-      if(!in_array($activeStatus, [self::STATUS_NEW, self::STATUS_IN_PROGRESS, self::STATUS_CANCEL, self::STATUS_FAILED, self::STATUS_COMPLETED]))
-      {
+      if (!in_array($activeStatus, $this->getAvailableStatuses())) {
         throw new DomainException('Ошибка: статуса ' . $activeStatus . ' статус не существует');
       }
     } catch (Throwable $exception) {
@@ -102,7 +101,13 @@ class GetStatusAction
    */
   public function getAvailableStatuses(): array
   {
-    return [self::STATUS_NEW, self::STATUS_IN_PROGRESS, self::STATUS_CANCEL, self::STATUS_FAILED, self::STATUS_COMPLETED];
+    return [
+      self::STATUS_NEW,
+      self::STATUS_IN_PROGRESS,
+      self::STATUS_CANCEL,
+      self::STATUS_FAILED,
+      self::STATUS_COMPLETED
+    ];
   }
 
   /**
@@ -112,7 +117,12 @@ class GetStatusAction
    */
   public function getAvailableActions(): array
   {
-    return [self::ACTION_RESPOND, self::ACTION_CANCEL, self::ACTION_FAIL, self::ACTION_COMPLETE];
+    return [
+      self::ACTION_RESPOND,
+      self::ACTION_CANCEL,
+      self::ACTION_FAIL,
+      self::ACTION_COMPLETE
+    ];
   }
 
   /**
