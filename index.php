@@ -1,10 +1,10 @@
 <?php
 
-use TaskForce\Task\GetStatusAction;
+use TaskForce\models\Task;
 
 require_once 'vendor/autoload.php';
 
-$obj = new GetStatusAction(1, 1, 'ff');
+$obj = new Task(1, 1, 'ff');
 
 $nextStatus = $obj->getNextStatus('complete');
 var_dump($obj->getAvailableStatuses());

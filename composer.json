@@ -1,21 +1,20 @@
 {
-    "name": "vendor/force",
-    "description": "website force",
-    "type": "project",
-    "authors": [
-        {
-            "name": "Maria Evdokimova",
-            "email": "e.marrri@mail.ru"
-        }
-    ],
-    "require": {
-
-    },
-    "require-dev": {
-    },
-    "autoload": {
-        "psr-4": {
-            "TaskForce\\": "src/"
-        }
+  "name": "vendor/force",
+  "description": "website force",
+  "type": "project",
+  "authors": [
+    {
+      "name": "Maria Evdokimova",
+      "email": "e.marrri@mail.ru"
     }
+  ],
+  "require": {
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": {
+      "TaskForce\\": "src/"
+    }
+  }
 }
