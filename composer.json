@@ -8,5 +8,14 @@
             "email": "e.marrri@mail.ru"
         }
     ],
-    "require": {}
+    "require": {
+
+    },
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "TaskForce\\": "src/"
+        }
+    }
 }

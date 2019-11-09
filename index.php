@@ -1,6 +1,8 @@
 <?php
 
-require_once 'src/GetStatusAction.php';
+use TaskForce\Task\GetStatusAction;
+
+require_once 'vendor/autoload.php';
 
 $obj = new GetStatusAction(1, 1, 'ff');
 

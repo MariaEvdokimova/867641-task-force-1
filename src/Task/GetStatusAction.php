@@ -1,5 +1,7 @@
 <?php
 
+namespace TaskForce\Task;
+
 /**
  * Class GetStatusAction
  */
@@ -80,15 +82,15 @@ class GetStatusAction
    * Set active status
    *
    * @param int $activeStatus
-   * @throws Exception Status does not exist
+   * @throws \Exception Status does not exist
    */
   public function setActiveStatus(int $activeStatus): void
   {
     try {
       if (!in_array($activeStatus, $this->getAvailableStatuses())) {
-        throw new DomainException('Ошибка: статуса ' . $activeStatus . ' статус не существует');
+        throw new \DomainException('Ошибка: статуса ' . $activeStatus . ' статус не существует');
       }
-    } catch (Throwable $exception) {
+    } catch (\Throwable $exception) {
       error_log("Не удалось определить статус: " . $exception->getMessage());
     }
     $this->activeStatus = $activeStatus;
