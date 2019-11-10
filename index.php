@@ -4,7 +4,13 @@ use TaskForce\models\Task;
 
 require_once 'vendor/autoload.php';
 
-$obj = new Task(1, 1, 'ff');
+$property_array = [
+    'ownerId' => 1,
+    'executorId' => 2,
+    'expirationDate' => '09.11.2019'
+];
+
+$obj = new Task($property_array);
 
 $nextStatus = $obj->getNextStatus('complete');
 var_dump($obj->getAvailableStatuses());

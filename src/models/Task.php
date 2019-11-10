@@ -2,7 +2,7 @@
 
 namespace TaskForce\models;
 
-use DomainException;
+use Exception;
 use Throwable;
 /**
  * Class models
@@ -73,11 +73,13 @@ class Task
      */
     private $expirationDate;
 
-    public function __construct(int $ownerId, int $executorId, string $expirationDate)
+    public function __construct(array $data)
     {
-        $this->ownerId = $ownerId;
-        $this->executorId = $executorId;
-        $this->expirationDate = $expirationDate;
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
     }
 
     /**
@@ -90,7 +92,7 @@ class Task
     {
         try {
             if (!in_array($activeStatus, $this->getAvailableStatuses())) {
-                throw new DomainException('Ошибка: статуса ' . $activeStatus . ' статус не существует');
+                throw new Exception('Ошибка: статуса ' . $activeStatus . ' статус не существует');
             }
             $this->activeStatus = $activeStatus;
         } catch (Throwable $exception) {
