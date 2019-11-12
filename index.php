@@ -1,8 +1,16 @@
 <?php
 
-require_once 'src/GetStatusAction.php';
+use TaskForce\models\Task;
 
-$obj = new GetStatusAction(1, 1, 'ff');
+require_once 'vendor/autoload.php';
+
+$propertyArray = [
+    'ownerId' => 1,
+    'executorId' => 2,
+    'expirationDate' => '09.11.2019'
+];
+
+$obj = new Task($propertyArray);
 
 $nextStatus = $obj->getNextStatus('complete');
 var_dump($obj->getAvailableStatuses());
