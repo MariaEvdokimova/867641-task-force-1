@@ -4,6 +4,8 @@ namespace TaskForce\models;
 
 use Exception;
 use Throwable;
+use TaskForce\models\FailAction;
+
 /**
  * Class models
  */
@@ -71,6 +73,7 @@ class Task
      *
      * @var string
      */
+
     private $expirationDate;
 
     public function __construct(array $data)
@@ -80,6 +83,24 @@ class Task
                 $this->$key = $value;
             }
         }
+    }
+
+    /**
+     * Retrieves Owner Id
+     *
+     * @return int
+     */
+    public function getOwnerId() {
+        return $this->ownerId;
+    }
+
+    /**
+     * Retrieves Executor Id
+     *
+     * @return int
+     */
+    public function getExecutorId() {
+        return $this->executorId;
     }
 
     /**
