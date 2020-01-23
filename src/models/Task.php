@@ -4,8 +4,6 @@ namespace TaskForce\models;
 
 use Exception;
 use Throwable;
-use TaskForce\models\FailAction;
-
 /**
  * Class models
  */
@@ -58,7 +56,7 @@ class Task
      *
      * @var int
      */
-    private $ownerId;
+    public $ownerId;
 
     /**
      * Executor ID
@@ -66,7 +64,7 @@ class Task
      * @var int
      */
 
-    private $executorId;
+    public $executorId;
 
     /**
      * Expiration date
@@ -83,24 +81,6 @@ class Task
                 $this->$key = $value;
             }
         }
-    }
-
-    /**
-     * Retrieves Owner Id
-     *
-     * @return int
-     */
-    public function getOwnerId() {
-        return $this->ownerId;
-    }
-
-    /**
-     * Retrieves Executor Id
-     *
-     * @return int
-     */
-    public function getExecutorId() {
-        return $this->executorId;
     }
 
     /**
@@ -156,10 +136,26 @@ class Task
      * Retrieves appropriate status after action
      *
      * @param string $action Action
+     * @param int $statusActual
+     * @param Task $task
+     * @param int $userId
      * @return int|null $nextStatus next status
      */
-    public function getNextStatus(string $action): ?int
+    public function getNextStatus(string $action, int $statusActual, Task $task, int $userId): ?int
     {
-        return self::ACTION_STATUS[$action] ?? null;
+        if ($statusActual === 0 && ($action === 'respond' or $action === 'cancel')) {
+            $className = $action === 'respond' ? RespondAction::getClassName() : CancelAction::getClassName();
+        } elseif ($statusActual === 1 && ($action === 'fail' or $action === 'complete')) {
+            $className = $action === 'fail' ? FailAction::getClassName() : CompleteAction::getClassName();
+        }
+
+        if ($className = $className ?? null) {
+            $classAction = new $className();
+
+            if ($classAction->checkAccess($task, $userId)) {
+                return self::ACTION_STATUS[$action] ?? null;
+            }
+        }
+        return null;
     }
 }

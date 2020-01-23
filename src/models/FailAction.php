@@ -11,31 +11,25 @@ namespace TaskForce\models;
 
 class FailAction extends AbstractAction
 {
-    public static function who()
-    {
-        return __CLASS__;
-    }
-
     /**
      * Retrieves internal name
      *
      * @return string
      */
-    public function getActionName()
+    public function getActionName(): string
     {
-        return 'Провалить';
+        return 'fail';
     }
 
     /**
      * Compare executor Id with user Id
      *
-     * @param object $actionTask
+     * @param Task $task
      * @param int $userId
      * @return bool
      */
-    public function verificationRights(object $actionTask, int $userId)
+    public function checkAccess(Task $task, int $userId): bool
     {
-        $executorId = $actionTask->getExecutorId();
-        return $executorId === $userId ? true : false;
+        return $userId === $task->executorId;
     }
 }

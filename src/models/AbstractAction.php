@@ -11,17 +11,14 @@ namespace TaskForce\models;
 
 abstract class AbstractAction
 {
-    public static function who()
-    {
-        return __CLASS__;
-    }
-
     /**
      * Retrieves Class Name
+     *
+     * @return string
      */
-    public static function getClassName()
+    public static function getClassName(): string
     {
-       static::who();
+        return static::class;
     }
 
     /**
@@ -29,14 +26,14 @@ abstract class AbstractAction
      *
      * @return string
      */
-    abstract public function getActionName();
+    abstract public function getActionName(): string;
 
     /**
      * Compare necessary Id with user Id
      *
-     * @param object $actionTask
+     * @param Task $task
      * @param int $userId
      * @return mixed
      */
-    abstract public function verificationRights(object $actionTask, int $userId);
+    abstract public function checkAccess(Task $task, int $userId): bool;
 }

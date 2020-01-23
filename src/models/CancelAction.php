@@ -11,32 +11,26 @@ namespace TaskForce\models;
 
 class CancelAction extends AbstractAction
 {
-    public static function who()
-    {
-        return __CLASS__;
-    }
-
     /**
      * Retrieves internal name
      *
      * @return string
      */
-    public function getActionName()
+    public function getActionName(): string
     {
-        return 'Отменить';
+        return 'cancel';
     }
 
     /**
      * Compare owner Id with user Id
      *
-     * @param object $actionTask
+     * @param Task $task
      * @param int $userId
      * @return bool
      */
-    public function verificationRights(object $actionTask, int $userId)
+    public function checkAccess(Task $task, int $userId): bool
     {
-        $ownerId = $actionTask->getOwnerId();
-        return $ownerId === $userId ? true : false;
+        return $userId === $task->ownerId;
     }
 
 }

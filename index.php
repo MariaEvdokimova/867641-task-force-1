@@ -2,8 +2,6 @@
 session_start();
 
 use TaskForce\models\Task;
-
-
 use TaskForce\models\CancelAction;
 
 require_once 'vendor/autoload.php';
@@ -16,13 +14,7 @@ $propertyArray = [
 
 $obj = new Task($propertyArray);
 
-$nextStatus = $obj->getNextStatus('complete');
+$nextStatus = $obj->getNextStatus('respond', 0, $obj, 2);
 var_dump($obj->getAvailableStatuses());
 var_dump($obj->getAvailableActions());
 var_dump($nextStatus);
-
-
-$objCancel = new CancelAction();
-
-var_dump($objCancel->verificationRights($obj, 2));
-
