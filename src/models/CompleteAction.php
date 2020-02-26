@@ -30,6 +30,6 @@ class CompleteAction extends AbstractAction
      */
     public function checkAccess(Task $task, int $userId): bool
     {
-        return $userId === $task->executorId;
+        return $userId === $task->ownerId;
     }
 }

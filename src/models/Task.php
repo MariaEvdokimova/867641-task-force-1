@@ -136,26 +136,39 @@ class Task
      * Retrieves appropriate status after action
      *
      * @param string $action Action
-     * @param int $statusActual
-     * @param Task $task
-     * @param int $userId
      * @return int|null $nextStatus next status
      */
-    public function getNextStatus(string $action, int $statusActual, Task $task, int $userId): ?int
+    public function getNextStatus(string $action): ?int
     {
-        if ($statusActual === 0 && ($action === 'respond' or $action === 'cancel')) {
-            $className = $action === 'respond' ? RespondAction::getClassName() : CancelAction::getClassName();
-        } elseif ($statusActual === 1 && ($action === 'fail' or $action === 'complete')) {
-            $className = $action === 'fail' ? FailAction::getClassName() : CompleteAction::getClassName();
+        return self::ACTION_STATUS[$action] ?? null;
+    }
+
+    /**
+     * @param int $userId User Id
+     *
+     * @return array Action
+     */
+    public function getCurrentActions(int $userId): ?array
+    {
+        switch ($this->activeStatus) {
+            case self::STATUS_NEW:
+                $actions = [
+                    new CancelAction(),
+                    new RespondAction(),
+                ];
+                break;
+            case self::STATUS_IN_PROGRESS:
+                $actions = [
+                    new CompleteAction(),
+                    new FailAction(),
+                ];
+                break;
+            default:
+                return [];
         }
 
-        if ($className = $className ?? null) {
-            $classAction = new $className();
-
-            if ($classAction->checkAccess($task, $userId)) {
-                return self::ACTION_STATUS[$action] ?? null;
-            }
-        }
-        return null;
+        return array_filter($actions, function(AbstractAction $action) use ($userId) {
+            return $action->checkAccess($this,$userId);
+        });
     }
 }

@@ -9,12 +9,16 @@ require_once 'vendor/autoload.php';
 $propertyArray = [
     'ownerId' => 1,
     'executorId' => 2,
-    'expirationDate' => '09.11.2019'
+    'expirationDate' => '09.11.2019',
+    'activeStatus' => 0
 ];
 
-$obj = new Task($propertyArray);
+$task = new Task($propertyArray);
 
-$nextStatus = $obj->getNextStatus('respond', 0, $obj, 2);
-var_dump($obj->getAvailableStatuses());
-var_dump($obj->getAvailableActions());
+$nextStatus = $task->getNextStatus('respond');
+var_dump($task->getAvailableStatuses());
+var_dump($task->getAvailableActions());
 var_dump($nextStatus);
+
+$currentAction = $task->getCurrentActions(1);
+var_dump($currentAction);
