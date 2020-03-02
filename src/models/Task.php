@@ -56,7 +56,7 @@ class Task
      *
      * @var int
      */
-    private $ownerId;
+    public $ownerId;
 
     /**
      * Executor ID
@@ -64,13 +64,14 @@ class Task
      * @var int
      */
 
-    private $executorId;
+    public $executorId;
 
     /**
      * Expiration date
      *
      * @var string
      */
+
     private $expirationDate;
 
     public function __construct(array $data)
@@ -140,5 +141,34 @@ class Task
     public function getNextStatus(string $action): ?int
     {
         return self::ACTION_STATUS[$action] ?? null;
+    }
+
+    /**
+     * @param int $userId User Id
+     *
+     * @return array Action
+     */
+    public function getCurrentActions(int $userId): ?array
+    {
+        switch ($this->activeStatus) {
+            case self::STATUS_NEW:
+                $actions = [
+                    new CancelAction(),
+                    new RespondAction(),
+                ];
+                break;
+            case self::STATUS_IN_PROGRESS:
+                $actions = [
+                    new CompleteAction(),
+                    new FailAction(),
+                ];
+                break;
+            default:
+                return [];
+        }
+
+        return array_filter($actions, function(AbstractAction $action) use ($userId) {
+            return $action->checkAccess($this,$userId);
+        });
     }
 }
