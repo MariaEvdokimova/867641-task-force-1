@@ -4,7 +4,7 @@ declare(strict_types=1);
 session_start();
 
 use TaskForce\models\Task;
-use TaskForce\exceptions\DataCorrectException;
+use TaskForce\exceptions\InvalidDataException;
 
 require_once 'vendor/autoload.php';
 
@@ -15,7 +15,12 @@ $propertyArray = [
 ];
 
 $task = new Task($propertyArray);
-$task->setActiveStatus(0);
+
+try {
+    $task->setActiveStatus(0);
+} catch (InvalidDataException $exception) {
+    error_log("Не удалось определить статус: {$exception->getMessage()}");
+}
 
 $nextStatus = $task->getNextStatus('respond');
 var_dump($task->getAvailableStatuses());
@@ -26,11 +31,9 @@ $currentAction = [];
 
 try {
     $currentAction = $task->getCurrentActions(2);
-}
-catch (DataCorrectException $exception) {
-    error_log("Такой роли не существует. " . $exception->getMessage());
+} catch (InvalidDataException $exception) {
+    error_log("Такой роли не существует {$exception->getMessage()}");
 }
 
 var_dump($currentAction);
-
 

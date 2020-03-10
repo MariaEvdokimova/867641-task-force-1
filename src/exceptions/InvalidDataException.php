@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace TaskForce\exceptions;
 
+use Exception;
 
-class DataCorrectException extends \Exception
+class InvalidDataException extends Exception
 {
 
 }

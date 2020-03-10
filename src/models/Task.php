@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace TaskForce\models;
 
 use Exception;
-use TaskForce\exceptions\DataCorrectException;
+use TaskForce\exceptions\InvalidDataException;
 use Throwable;
 /**
  * Class models
@@ -93,14 +93,10 @@ class Task
      */
     public function setActiveStatus(int $activeStatus): void
     {
-        try {
-            if (!in_array($activeStatus, $this->getAvailableStatuses())) {
-                throw new DataCorrectException('Ошибка: статус ' . $activeStatus . ' не существует');
-            }
-            $this->activeStatus = $activeStatus;
-        } catch (DataCorrectException $exception) {
-            error_log("Не удалось определить статус: " . $exception->getMessage());
+        if (!in_array($activeStatus, $this->getAvailableStatuses())) {
+            throw new InvalidDataException("Ошибка: статус {$activeStatus} не существует");
         }
+        $this->activeStatus = $activeStatus;
     }
 
     /**
@@ -153,8 +149,8 @@ class Task
      */
     public function getCurrentActions(int $userId): ?array
     {
-        if (!($userId === $this->ownerId or $userId === $this->executorId)) {
-            throw new DataCorrectException("Ошибка: нет такой роли " . $userId);
+        if ($userId !== $this->ownerId && $userId !== $this->executorId) {
+            throw new InvalidDataException("Ошибка: нет такой роли {$userId}");
         }
 
         switch ($this->activeStatus) {
