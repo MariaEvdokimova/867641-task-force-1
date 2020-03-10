@@ -149,7 +149,7 @@ class Task
      */
     public function getCurrentActions(int $userId): ?array
     {
-        if ($userId !== $this->ownerId && $userId !== $this->executorId) {
+        if ($userId !== $this->ownerId || $userId !== $this->executorId) {
             throw new InvalidDataException("Ошибка: нет такой роли {$userId}");
         }
 
