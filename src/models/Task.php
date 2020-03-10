@@ -1,8 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace TaskForce\models;
 
 use Exception;
+use TaskForce\exceptions\InvalidDataException;
 use Throwable;
 /**
  * Class models
@@ -87,18 +89,14 @@ class Task
      * Set active status
      *
      * @param int $activeStatus
-     * @throws \Exception Status does not exist
+     * @throws Exception Status does not exist
      */
     public function setActiveStatus(int $activeStatus): void
     {
-        try {
-            if (!in_array($activeStatus, $this->getAvailableStatuses())) {
-                throw new Exception('Ошибка: статуса ' . $activeStatus . ' статус не существует');
-            }
-            $this->activeStatus = $activeStatus;
-        } catch (Throwable $exception) {
-            error_log("Не удалось определить статус: " . $exception->getMessage());
+        if (!in_array($activeStatus, $this->getAvailableStatuses())) {
+            throw new InvalidDataException("Ошибка: статус {$activeStatus} не существует");
         }
+        $this->activeStatus = $activeStatus;
     }
 
     /**
@@ -147,9 +145,14 @@ class Task
      * @param int $userId User Id
      *
      * @return array Action
+     * @throws Exception User role does not exist
      */
     public function getCurrentActions(int $userId): ?array
     {
+        if ($userId !== $this->ownerId || $userId !== $this->executorId) {
+            throw new InvalidDataException("Ошибка: нет такой роли {$userId}");
+        }
+
         switch ($this->activeStatus) {
             case self::STATUS_NEW:
                 $actions = [
