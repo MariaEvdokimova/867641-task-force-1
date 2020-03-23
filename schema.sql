@@ -21,14 +21,15 @@ CREATE TABLE roles (
 
 CREATE TABLE categories (
   id INT PRIMARY KEY AUTO_INCREMENT,
-  category_name VARCHAR(255) NOT NULL
+  category_name VARCHAR(255) NOT NULL,
+  icon VARCHAR(128)
 )ENGINE=InnoDB CHARACTER SET=UTF8 COMMENT='Specializations';
 
-CREATE TABLE locations (
+CREATE TABLE cities (
   id INT PRIMARY KEY AUTO_INCREMENT,
   city VARCHAR(128) NOT NULL,
-  region VARCHAR(128),
-  street VARCHAR(128)
+  lat DECIMAL(9, 6),
+  long DECIMAL(9, 6)
 )ENGINE=InnoDB CHARACTER SET=UTF8 COMMENT='Locations';
 
 CREATE TABLE users (
@@ -36,20 +37,20 @@ CREATE TABLE users (
   user_name VARCHAR(128) NOT NULL,
   email VARCHAR(128) NOT NULL UNIQUE,
   password VARCHAR(64) NOT NULL,
-  telephone VARCHAR(11),
+  telephone INT,
   skype VARCHAR(25),
-  messenger VARCHAR(25),
-  location_id INT,
+  telegram VARCHAR(25),
+  city_id INT,
   role_id INT,
   rating INT NOT NULL DEFAULT 0,
   date_of_birth TIMESTAMP NOT NULL,
-  biography TEXT,
+  about TEXT,
   avatar VARCHAR(128),
   last_active_time TIMESTAMP,
   creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
   FOREIGN KEY (role_id) REFERENCES roles(id),
-  FOREIGN KEY (location_id) REFERENCES locations(id),
+  FOREIGN KEY (city_id) REFERENCES cities(id),
 
   INDEX email_password (email, password)
 )ENGINE=InnoDB CHARACTER SET=UTF8 COMMENT='Users';
@@ -89,10 +90,10 @@ CREATE TABLE tasks (
   category_id INT NOT NULL,
   owner_id INT NOT NULL,
   executor_id INT,
-  location_id INT,
-  location_comment VARCHAR(128),
+  city_id INT,
+  address VARCHAR(128),
   status_id INT DEFAULT 0,
-  price INT,
+  budget INT,
   view_count INT DEFAULT 0,
   creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   status_date TIMESTAMP NOT NULL,
@@ -101,7 +102,7 @@ CREATE TABLE tasks (
   FOREIGN KEY (category_id) REFERENCES categories(id),
   FOREIGN KEY (owner_id) REFERENCES users(id),
   FOREIGN KEY (executor_id) REFERENCES users(id),
-  FOREIGN KEY (location_id) REFERENCES locations(id),
+  FOREIGN KEY (city_id) REFERENCES cities(id),
   FOREIGN KEY (status_id) REFERENCES statuses(id),
 
   INDEX task_category (task_name, category_id)
@@ -122,7 +123,7 @@ CREATE TABLE respond (
   id INT PRIMARY KEY AUTO_INCREMENT,
   task_id INT NOT NULL,
   sender_id INT NOT NULL,
-  text VARCHAR(255),
+  description VARCHAR(255),
   respond_price INT,
   creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -137,7 +138,7 @@ CREATE TABLE chat (
   task_id INT NOT NULL,
   sender_id INT NOT NULL,
   recipient_id INT NOT NULL,
-  text VARCHAR(255),
+  description VARCHAR(255),
   creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
   FOREIGN KEY (task_id) REFERENCES tasks(id),
@@ -151,7 +152,7 @@ CREATE TABLE reviews (
   id INT PRIMARY KEY AUTO_INCREMENT,
   task_id INT NOT NULL,
   executor_id INT NOT NULL,
-  text VARCHAR(255),
+  description VARCHAR(255),
   rating TINYINT(1),
   creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
