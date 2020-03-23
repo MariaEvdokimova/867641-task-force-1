@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Машенька
- * Date: 10.12.2019
- * Time: 23:20
- */
+declare(strict_types=1);
 
 namespace TaskForce\models;
 
