@@ -6,7 +6,8 @@ USE tasks;
 
 CREATE TABLE statuses (
   id INT PRIMARY KEY AUTO_INCREMENT,
-  status_name VARCHAR(128) UNIQUE NOT NULL
+  status_name VARCHAR(128) UNIQUE NOT NULL,
+  status_number INT NOT NULL
 )ENGINE=InnoDB CHARACTER SET=UTF8 COMMENT='Task statuses';
 
 CREATE TABLE actions (
@@ -28,8 +29,8 @@ CREATE TABLE categories (
 CREATE TABLE cities (
   id INT PRIMARY KEY AUTO_INCREMENT,
   city VARCHAR(128) NOT NULL,
-  lat DECIMAL(9, 6),
-  long DECIMAL(9, 6)
+  latitude DECIMAL(9, 6),
+  longitude DECIMAL(9, 6)
 )ENGINE=InnoDB CHARACTER SET=UTF8 COMMENT='Locations';
 
 CREATE TABLE users (
@@ -46,6 +47,8 @@ CREATE TABLE users (
   date_of_birth TIMESTAMP NOT NULL,
   about TEXT,
   avatar VARCHAR(128),
+  count_fails INT,
+  count_viewers INT,
   last_active_time TIMESTAMP,
   creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -91,7 +94,9 @@ CREATE TABLE tasks (
   owner_id INT NOT NULL,
   executor_id INT,
   city_id INT,
-  address VARCHAR(128),
+  address VARCHAR(255),
+  latitude DECIMAL(9, 6),
+  longitude DECIMAL(9, 6),
   status_id INT DEFAULT 0,
   budget INT,
   view_count INT DEFAULT 0,

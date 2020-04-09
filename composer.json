@@ -9,6 +9,7 @@
     }
   ],
   "require": {
+    "ext-mysqli": "*"
   },
   "require-dev": {
   },
