@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 session_start();
 
-use TaskForce\db\LoadData;
 use TaskForce\models\Task;
 use TaskForce\exceptions\InvalidDataException;
-use TaskForce\db\Connection;
+use TaskForce\utils\Csv2SqlParser;
 
 require_once 'vendor/autoload.php';
 /*
@@ -34,14 +33,17 @@ try {
     error_log("Такой роли не существует {$exception->getMessage()}");
 }
 */
-$columns = "`category_name`,`icon`";
-$table = "categories";
-$file_name = $_SERVER['DOCUMENT_ROOT'] . '/data/categories.csv';
 
+$file = $_SERVER['DOCUMENT_ROOT'] . '/data/reviews.csv';
 try {
-    $loadData = new LoadData($file_name, $table, $columns);
-    $loadData->insertData();
-
+//CSV2SQLParser::parse($file, $_SERVER['DOCUMENT_ROOT'] . '/sqls', ',');
+    CSV2SQLParser::parse($file, $_SERVER['DOCUMENT_ROOT'] . '/sqls', ',', ['task_id', 'executor_id'], function () {
+        return [
+            rand(31,40),
+            rand(41,60),
+            // '2020-01-10 12:00:58',
+        ];
+    });
 } catch (Exception $e) {
-    error_log("Такой файл не найден {$e->getMessage()}");
+    error_log("Ошибка {$e->getMessage()}");
 }
