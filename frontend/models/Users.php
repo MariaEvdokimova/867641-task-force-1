@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use Yii;
+use yii\base\InvalidConfigException;
 
 /**
  * This is the model class for table "users".
@@ -215,4 +216,28 @@ class Users extends \yii\db\ActiveRecord
     {
         return $this->hasMany(UserCategory::className(), ['user_id' => 'id']);
     }
+    /**
+     * Gets query for [[Categories]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCategories() {
+        try {
+            return $this->hasMany(Categories::class, ['id' => 'category_id'])
+                ->viaTable('user_category', ['user_id' => 'id']);
+        } catch (InvalidConfigException $e) {
+        }
+    }
+    public function getCountReviews() {
+        return Reviews::find()->where(['executor_id' => $this->id])->count();
+    }
+
+    public function getSumReviews() {
+        return Reviews::find()->where(['executor_id' => $this->id])->sum('rating');
+    }
+
+    public function getCountTasks() {
+        return Tasks::find()->where(['executor_id' => $this->id])->count();
+    }
+
 }

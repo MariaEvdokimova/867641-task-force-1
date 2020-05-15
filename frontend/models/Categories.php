@@ -67,4 +67,5 @@ class Categories extends \yii\db\ActiveRecord
     {
         return $this->hasMany(UserCategory::className(), ['category_id' => 'id']);
     }
+
 }
