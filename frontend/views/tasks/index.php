@@ -19,7 +19,7 @@ use yii\bootstrap\ActiveForm;
                 <a href="#" class="link-regular"><h2><?=$task->task_name; ?></h2></a>
                 <a  class="new-task__type link-regular" href="#"><p><?=$task->category->category_name; ?></p></a>
             </div>
-            <div class="new-task__icon new-task__icon--translation"></div>
+            <div class="new-task__icon new-task__icon--<?=$task->category->icon; ?>"></div>
             <p class="new-task_description">
                 <?=$task->description; ?>
             </p>
