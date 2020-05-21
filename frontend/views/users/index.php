@@ -5,6 +5,7 @@
 /* @var $model Users*/
 /* @var $users*/
 
+use frontend\components\StarRatingWidget;
 use frontend\models\Users;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
@@ -35,17 +36,21 @@ use yii\bootstrap\ActiveForm;
             </div>
             <div class="feedback-card__top--name user__search-card">
                 <p class="link-name"><a href="#" class="link-regular"><?=$user->user_name; ?></a></p>
-                <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
-                <b><?= empty($user->countTasks) ? 0 : round($user->sumReviews / $user->countTasks, 2); ?></b>
+              <!--  <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
+               -->
+                <?php try {
+                    echo StarRatingWidget::widget(['$rating' => $user->avgRating]);
+                } catch (Exception $e) {
+                } ?>
+                <b><?=$user->avgRating; ?></b>
                 <p class="user__search-content">
                     <?=$user->about; ?>
                 </p>
             </div>
-            <span class="new-task__time">Был на сайте <?=$user->creation_date; ?></span>
+            <span class="new-task__time">Был на сайте <?=$user->relativeTime; ?></span>
         </div>
             <div class="link-specialization user__search-link--bottom">
-                <?php $categories = $user->categories;
-                foreach ($categories as $category): ?>
+                <?php foreach ($user->categories as $category): ?>
                 <a href="#" class="link-regular"><?=$category->category_name; ?></a>
                 <?php endforeach; ?>
             </div>

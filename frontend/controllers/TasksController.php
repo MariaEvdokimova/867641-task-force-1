@@ -15,10 +15,6 @@ class TasksController extends Controller
            ->orderBy(['creation_date' => SORT_DESC])
            ->all();
 
-       foreach ($tasks as $task) {
-            $task['creation_date'] = \Yii::$app->formatter->format($task['creation_date'], 'relativeTime');
-        }
-
        $this->view->title = "TaskForce";
         return $this->render('index', ['tasks' => $tasks]);
     }

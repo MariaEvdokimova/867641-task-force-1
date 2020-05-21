@@ -33,6 +33,7 @@ use Yii;
  * @property Reviews[] $reviews
  * @property Statuses $status
  * @property TaskFile[] $taskFiles
+ * @property string $relativeTime
  */
 class Tasks extends \yii\db\ActiveRecord
 {
@@ -178,6 +179,14 @@ class Tasks extends \yii\db\ActiveRecord
     public function getTaskFiles()
     {
         return $this->hasMany(TaskFile::className(), ['task_id' => 'id']);
+    }
+
+    /**
+     * @return string
+     */
+    public function getRelativeTime()
+    {
+        return Yii::$app->formatter->format($this->creation_date, 'relativeTime');
     }
 
 }

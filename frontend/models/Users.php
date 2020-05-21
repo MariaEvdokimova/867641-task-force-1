@@ -39,6 +39,10 @@ use yii\base\InvalidConfigException;
  * @property Tasks[] $tasks
  * @property Tasks[] $tasks0
  * @property UserCategory[] $userCategories
+ * @property int|string $countReviews
+ * @property float $avgRating
+ * @property int|string $countTasks
+ * @property string $relativeTime
  */
 class Users extends \yii\db\ActiveRecord
 {
@@ -228,16 +232,35 @@ class Users extends \yii\db\ActiveRecord
         } catch (InvalidConfigException $e) {
         }
     }
-    public function getCountReviews() {
+    /**
+     * @return int|string
+     */
+    public function getCountReviews()
+    {
         return Reviews::find()->where(['executor_id' => $this->id])->count();
     }
-
-    public function getSumReviews() {
-        return Reviews::find()->where(['executor_id' => $this->id])->sum('rating');
+    /**
+     * @return false|float
+     */
+    public function getAvgRating()
+    {
+        $totalRating = Reviews::find()->where(['executor_id' => $this->id])->sum('rating');
+        return empty($this->getCountReviews()) ? 0 : round($totalRating / $this->getCountReviews(), 2);
+    }
+    /**
+     * @return int|string
+     */
+    public function getCountTasks()
+    {
+        return Tasks::find()->where(['executor_id' => $this->id])->count();
     }
 
-    public function getCountTasks() {
-        return Tasks::find()->where(['executor_id' => $this->id])->count();
+    /**
+     * @return string
+     */
+    public function getRelativeTime()
+    {
+        return Yii::$app->formatter->format($this->last_active_time, 'relativeTime');
     }
 
 }

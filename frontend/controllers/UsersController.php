@@ -15,10 +15,6 @@ class UsersController extends Controller
             ->orderBy(['creation_date' => SORT_DESC])
             ->all();
 
-        foreach ($users as $user) {
-            $user['creation_date'] = \Yii::$app->formatter->format($user['creation_date'], 'relativeTime');
-        }
-
         $this->view->title = "TaskForce";
         return $this->render('index', ['users' => $users]);
     }

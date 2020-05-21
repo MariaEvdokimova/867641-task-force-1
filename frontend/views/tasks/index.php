@@ -25,7 +25,7 @@ use yii\bootstrap\ActiveForm;
             </p>
             <b class="new-task__price new-task__price--translation"><?=$task->budget; ?><b> ₽</b></b>
             <p class="new-task__place"><?=$task->address; ?></p>
-            <span class="new-task__time"><?=$task->creation_date; ?></span>
+            <span class="new-task__time"><?=$task->relativeTime; ?></span>
         <?php endforeach; ?>
         </div>
     </div>
