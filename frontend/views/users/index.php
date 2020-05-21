@@ -39,7 +39,7 @@ use yii\bootstrap\ActiveForm;
               <!--  <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
                -->
                 <?php try {
-                    echo StarRatingWidget::widget(['$rating' => $user->avgRating]);
+                    echo StarRatingWidget::widget(['rating' => $user->avgRating]);
                 } catch (Exception $e) {
                 } ?>
                 <b><?=$user->avgRating; ?></b>
