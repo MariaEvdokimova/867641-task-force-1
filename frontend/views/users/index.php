@@ -5,7 +5,7 @@
 /* @var $model Users*/
 /* @var $users*/
 
-use frontend\components\StarRatingWidget;
+use frontend\widgets\StarRatingWidget;
 use frontend\models\Users;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
@@ -39,7 +39,7 @@ use yii\bootstrap\ActiveForm;
               <!--  <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
                -->
                 <?php try {
-                    echo StarRatingWidget::widget(['rating' => $user->avgRating]);
+                    echo StarRatingWidget::widget(['rating' => round($user->avgRating,0)]);
                 } catch (Exception $e) {
                 } ?>
                 <b><?=$user->avgRating; ?></b>
