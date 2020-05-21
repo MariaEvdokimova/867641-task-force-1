@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use Yii;
+use yii\base\InvalidConfigException;
 
 /**
  * This is the model class for table "users".
@@ -38,6 +39,10 @@ use Yii;
  * @property Tasks[] $tasks
  * @property Tasks[] $tasks0
  * @property UserCategory[] $userCategories
+ * @property int|string $countReviews
+ * @property float $avgRating
+ * @property int|string $countTasks
+ * @property string $relativeTime
  */
 class Users extends \yii\db\ActiveRecord
 {
@@ -215,4 +220,47 @@ class Users extends \yii\db\ActiveRecord
     {
         return $this->hasMany(UserCategory::className(), ['user_id' => 'id']);
     }
+    /**
+     * Gets query for [[Categories]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCategories() {
+        try {
+            return $this->hasMany(Categories::class, ['id' => 'category_id'])
+                ->viaTable('user_category', ['user_id' => 'id']);
+        } catch (InvalidConfigException $e) {
+        }
+    }
+    /**
+     * @return int|string
+     */
+    public function getCountReviews()
+    {
+        return Reviews::find()->where(['executor_id' => $this->id])->count();
+    }
+    /**
+     * @return false|float
+     */
+    public function getAvgRating()
+    {
+        $totalRating = Reviews::find()->where(['executor_id' => $this->id])->sum('rating');
+        return empty($this->getCountReviews()) ? 0 : round($totalRating / $this->getCountReviews(), 2);
+    }
+    /**
+     * @return int|string
+     */
+    public function getCountTasks()
+    {
+        return Tasks::find()->where(['executor_id' => $this->id])->count();
+    }
+
+    /**
+     * @return string
+     */
+    public function getRelativeTime()
+    {
+        return Yii::$app->formatter->format($this->last_active_time, 'relativeTime');
+    }
+
 }
