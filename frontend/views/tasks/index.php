@@ -42,6 +42,31 @@ use yii\bootstrap\ActiveForm;
 </section>
 <section  class="search-task">
     <div class="search-task__wrapper">
+
+        <?php $form = ActiveForm::begin(['id' => 'filter-form', 'options' => ['class' => 'search-task__form']]); ?>
+
+        <fieldset class="search-task__categories">
+            <legend>Категории</legend>
+
+
+            <?php foreach ($tasks as $task): ?>
+                <?= $form->field($task->category, 'category_name', [
+                'template' => "{input} {label}"
+                ])->CheckBox([
+                    'class' => 'visually-hidden checkbox__input'
+                 ], false)->label($task->category->category_name) ?>
+            <?php endforeach; ?>
+
+
+        </fieldset>
+        <fieldset class="search-task__categories">
+            <legend>Дополнительно</legend>
+
+        </fieldset>
+        <?= Html::submitButton('Искать', ['class' => 'button', 'name' => 'search-button']) ?>
+
+        <?php ActiveForm::end(); ?>
+
         <form class="search-task__form" name="test" method="post" action="#">
             <fieldset class="search-task__categories">
                 <legend>Категории</legend>
